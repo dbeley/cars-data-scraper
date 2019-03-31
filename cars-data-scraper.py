@@ -66,6 +66,7 @@ def get_specs(url):
     dict["Model"] = main_specs[2].find('span').find(text=True)
     dict["Version"] = main_specs[3].find('span').find(text=True)
     dict["Motor"] = main_specs[4].find('span').find(text=True)
+    print(f"Extracting {dict['Motor']}")
     detailed_specs = soup.find_all(True, {'class': 'col-6'})
 
     for a, b in grouper(detailed_specs, 2):
@@ -98,7 +99,7 @@ def main():
         already_made = []
         already_made = [f"https://www.cars-data.com/en/{x}" for x in already_made]
         if brand and brand not in already_made:
-            logger.debug(f"Brand : {brand}")
+            print(f"Brand : {brand}")
             models = get_models(brand)
             # logger.debug(f"Models : {models}")
             for model in models:
@@ -120,7 +121,9 @@ def main():
                                     time.sleep(1)
                                     # break
             df = pd.DataFrame.from_dict(cars_dict, orient='index')
-            df.to_csv(f"{directory}/cars_{cars_dict[0]['Brand']}.csv", sep=";")
+            filename = f"{directory}/cars_{cars_dict[0]['Brand']}.csv"
+            print(f"Writing {filename}")
+            df.to_csv(filename, sep=";")
             cars_dict = dict()
             index_dict = 0
 
