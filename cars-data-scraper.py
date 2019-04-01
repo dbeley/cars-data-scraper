@@ -18,38 +18,46 @@ def get_soup(url):
 
 def get_brands(url):
     brands = []
-    for brand in get_soup(url).find_all('div', {'class': 'col-2 center'}):
-        brands.append(brand.find('a')['href'])
+    soup = get_soup(url)
+    for brand in soup.find_all('div', {'class': 'col-2 center'}):
+        brands.append(str(brand.find('a')['href']))
+    soup.decompose()
     return brands
 
 
 def get_models(url):
     models = []
-    for model in get_soup(url).find_all('div', {'class': 'col-4'}):
+    soup = get_soup(url)
+    for model in soup.find_all('div', {'class': 'col-4'}):
         try:
-            models.append(model.find('a')['href'])
+            models.append(str(model.find('a')['href']))
         except Exception:
             pass
+    soup.decompose()
     return models
 
 
 def get_versions(url):
     versions = []
-    for version in get_soup(url).find_all('div', {'class': 'col-4'}):
+    soup = get_soup(url)
+    for version in soup.find_all('div', {'class': 'col-4'}):
         try:
-            versions.append(version.find('a')['href'])
+            versions.append(str(version.find('a')['href']))
         except Exception:
             pass
+    soup.decompose()
     return versions
 
 
 def get_motors(url):
     motors = []
-    for motor in get_soup(url).find_all('div', {'class': 'col-6'}):
+    soup = get_soup(url)
+    for motor in soup.find_all('div', {'class': 'col-6'}):
         try:
-            motors.append(motor.find('a')['href'])
+            motors.append(str(motor.find('a')['href']))
         except Exception:
             pass
+    soup.decompose()
     return motors
 
 
@@ -62,21 +70,20 @@ def get_specs(url):
     dict = {}
     soup = get_soup(url)
     main_specs = soup.find('div', {'id': 'breadcrumb'}).find_all('a')
-    dict["Brand"] = main_specs[1].find('span').find(text=True)
-    dict["Model"] = main_specs[2].find('span').find(text=True)
-    dict["Version"] = main_specs[3].find('span').find(text=True)
-    dict["Motor"] = main_specs[4].find('span').find(text=True)
+    dict["Brand"] = str(main_specs[1].find('span').find(text=True))
+    dict["Model"] = str(main_specs[2].find('span').find(text=True))
+    dict["Version"] = str(main_specs[3].find('span').find(text=True))
+    dict["Motor"] = str(main_specs[4].find('span').find(text=True))
     print(f"Extracting {dict['Motor']}")
     detailed_specs = soup.find_all(True, {'class': 'col-6'})
-
     for a, b in grouper(detailed_specs, 2):
         try:
-            type = a.find(text=True).replace(":", "")
-            value = b.find(text=True)
+            type = str(a.find(text=True).replace(":", ""))
+            value = str(b.find(text=True))
             dict[type] = value
         except Exception:
             pass
-
+    soup.decompose()
     return dict
 
 
