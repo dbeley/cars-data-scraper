@@ -128,9 +128,12 @@ def main():
                                     time.sleep(1)
                                     # break
             df = pd.DataFrame.from_dict(cars_dict, orient='index')
-            filename = f"{directory}/cars_{cars_dict[0]['Brand']}.csv"
-            print(f"Writing {filename}")
-            df.to_csv(filename, sep=";")
+            try:
+                filename = f"{directory}/cars_{cars_dict[0]['Brand']}.csv"
+                print(f"Writing {filename}")
+                df.to_csv(filename, sep=";")
+            except Exception as e:
+                logger.error(f"Error exporting brand {brand} : {str(e)}")
             cars_dict = dict()
             index_dict = 0
 
